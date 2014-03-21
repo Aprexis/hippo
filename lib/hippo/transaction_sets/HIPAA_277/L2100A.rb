@@ -16,6 +16,15 @@ module Hippo::TransactionSets
                   'NM108' => ["46", "FI", "PI", "XV"]
                 }
 
+      segment Hippo::Segments::PER,
+              :name => 'Source Contact Information',
+              :minimum => 1,
+              :maximum => 1,
+              :position => 1000,
+              :identified_by => {
+                  'PER01' => 'IC'
+              }
+
     end
   end
 end
