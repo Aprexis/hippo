@@ -58,6 +58,17 @@ module Hippo::TransactionSets
                   'HL.HL04' => ["0", "1"]
                 }
 
+      # Subscriber
+      loop Hippo::TransactionSets::HIPAA_277::L2000D,
+               :name           => 'Subscriber Level',
+               :minimum        => 0,
+               :maximum        => 99999,
+               :position       => 100,
+               :identified_by => {
+                   'HL.HL03' => '22',
+                   'HL.HL04' => ['0', '1']
+               }
+
       #Transaction Set Trailer
       segment Hippo::Segments::SE,
                 :name           => 'Transaction Set Trailer',
