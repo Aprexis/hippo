@@ -20,9 +20,9 @@ module Hippo::TransactionSets
                 :maximum        => 1,
                 :position       => 200,
                 :identified_by => {
-                  'BHT01' => '0085',
+                  'BHT01' => '0010',
                   'BHT02' => '08',
-                  'BHT06' => 'TH'
+                  'BHT06' => 'DG'
                 }
 
       #Information Source Level
