@@ -19,10 +19,7 @@ module Hippo::TransactionSets
                 :name           => 'Claim Level Status Information',
                 :minimum        => 1,
                 :maximum        => 99999,
-                :position       => 1000,
-                :identified_by => {
-                  'STC03' => ["U", "WQ"]
-                }
+                :position       => 1000
 
       #Payer Claim Control Number
       segment Hippo::Segments::REF,
@@ -53,6 +50,16 @@ module Hippo::TransactionSets
                 :identified_by => {
                   'REF01' => 'BLT'
                 }
+
+      #Pharmacy Prescription Number
+      segment Hippo::Segments::REF,
+              :name           => 'Pharmacy Prescription Number',
+              :minimum        => 0,
+              :maximum        => 1,
+              :position       => 1130,
+              :identified_by => {
+                  'REF01' => 'XZ'
+              }
 
       #Claim Level Service Date
       segment Hippo::Segments::DTP,

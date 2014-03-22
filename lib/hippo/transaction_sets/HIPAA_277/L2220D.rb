@@ -31,16 +31,6 @@ module Hippo::TransactionSets
                   'REF01' => 'FJ'
                 }
 
-      #Pharmacy Prescription Number
-      segment Hippo::Segments::REF,
-                :name           => 'Pharmacy Prescription Number',
-                :minimum        => 0,
-                :maximum        => 1,
-                :position       => 2010,
-                :identified_by => {
-                  'REF01' => 'XZ'
-                }
-
       #Service Line Date
       segment Hippo::Segments::DTP,
                 :name           => 'Service Line Date',
