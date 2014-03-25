@@ -51,6 +51,16 @@ module Hippo::TransactionSets
                   'REF01' => 'BLT'
                 }
 
+      #Patient Control Number
+      segment Hippo::Segments::REF,
+              :name           => 'Patient Control Number',
+              :minimum        => 0,
+              :maximum        => 1,
+              :position       => 1120,
+              :identified_by => {
+                  'REF01' => 'EJ'
+              }
+
       #Pharmacy Prescription Number
       segment Hippo::Segments::REF,
               :name           => 'Pharmacy Prescription Number',
