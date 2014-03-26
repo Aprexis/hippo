@@ -7,7 +7,7 @@ module Hippo::TransactionSets
       #Claim Status Tracking Number
       segment Hippo::Segments::TRN,
                 :name           => 'Claim Status Tracking Number',
-                :minimum        => 1,
+                :minimum        => 0,
                 :maximum        => 1,
                 :position       => 900,
                 :identified_by => {
