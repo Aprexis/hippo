@@ -11,7 +11,7 @@ module Hippo::TransactionSets
                 :maximum        => 1,
                 :position       => 900,
                 :identified_by => {
-                  'TRN01' => '1'
+                  'TRN01' => '2'
                 }
 
       #Payer Claim Control Number

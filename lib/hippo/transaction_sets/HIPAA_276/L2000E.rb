@@ -42,7 +42,7 @@ module Hippo::TransactionSets
                 :maximum        => 99999,
                 :position       => 900,
                 :identified_by => {
-                  'TRN.TRN01' => '1'
+                  'TRN.TRN01' => '2'
                 }
 
     end
