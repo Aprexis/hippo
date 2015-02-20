@@ -9,6 +9,10 @@ module Hippo
 
         fields.each_with_index do |value, index|
           field = self.class.fields[index]
+          
+          # IAB: I don't know if this is really needed, but I ran into an error here at one point during my
+          # testing and added this check. I don't think it hurts to have it and may help in some cases.
+          next unless field.present?
 
           # if the field is an array that means it is a
           # composite field

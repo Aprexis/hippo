@@ -23,7 +23,6 @@ module Hippo::TransactionSets
       alias segment add_component
       alias loop add_component
 
-
       def grouped_components
         @grouped_components ||= build_grouped_components
       end
@@ -48,7 +47,8 @@ module Hippo::TransactionSets
       private :build_grouped_components
     end
 
-    attr_accessor :values, :parent, :sequences, :ISA, :GS, :GE, :IEA
+    # IAB: added error_segments to track segments that can't be processed.
+    attr_accessor :values, :parent, :sequences, :ISA, :GS, :GE, :IEA, :error_segments
 
     def initialize(options = {})
       @parent = options[:parent]
@@ -61,7 +61,7 @@ module Hippo::TransactionSets
 
       populate(options[:segments]) if options[:segments]
     end
-
+ 
     def populate(segments)
       grouped_components = self.class.grouped_components
 
@@ -124,16 +124,27 @@ module Hippo::TransactionSets
             child_segments = segments.slice!(0, component_matches_found.min || segments.length)
             values[component.sequence] ||= component.initialize_component(self)
             if component.repeating?
-              values[component.sequence].build {|comp| comp.populate(child_segments) }
+              values[component.sequence].build do |comp|
+                comp.populate(child_segments)
+                
+                # IAB propagate errors up the hierarchy.
+                @error = true if comp.failed_parsing?
+              end
             else
               values[component.sequence].populate(child_segments)
+                
+               # IAB propagate errors up the hierarchy.
+              @error = true if values[component.sequence].failed_parsing?
             end
           end
         end
       end
 
       unless segments.empty?
-        raise Hippo::Exceptions::ParseError.new "Remaining Segments for #{self.class.identifier} after parsing was completed. Segments remaining: \n" + segments.map(&:to_s).join("\n")
+        # IAB replaced exception so that one bad transaction set in a 277 does not cause a complete failure
+        # of the entire 277, but instead allows us to figure out which claim couldn't be processed.
+        @error_segments = segments.clone
+        @error = true
       end
     end
 
@@ -181,6 +192,10 @@ module Hippo::TransactionSets
 
       values.sort.each do |sequence, component|
         output += component.to_s
+      end
+      
+      if error_segments.present?
+        output += error_segments.collect { |s| s.to_s }.join('')
       end
 
       output
@@ -231,6 +246,13 @@ module Hippo::TransactionSets
       yield values[component.sequence] if block_given?
 
       values[component.sequence]
+    end
+    
+    # IAB did parsing fail? This could have been a failure in this particular transaction set (in which
+    # case error_segments are set to the extra segments found) or it could be a propogated failure (in
+    # which case one of the component transaction sets will have error_segments).
+    def failed_parsing?
+      @error
     end
   end
 end
