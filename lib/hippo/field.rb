@@ -55,9 +55,9 @@ module Hippo
     end
 
     def generate_decimal(value)
-      value ||= BigDecimal.new('0')
+      value ||= BigDecimal('0')
 
-      value.to_s('F').sub(/\.0\z/,'').rjust(minimum, '0')
+      value.to_s('F').sub(/\.0\z/, '').rjust(minimum, '0')
     end
 
     def parse_decimal(value)
@@ -66,7 +66,7 @@ module Hippo
         return nil
       end
 
-      BigDecimal.new(value.to_s)
+      BigDecimal(value.to_s)
     end
 
     def generate_time(value)
@@ -98,7 +98,7 @@ module Hippo
         Time.strptime(value, format)
       else invalid!
       end
-    rescue
+    rescue StandardError
       invalid!
     end
 
@@ -121,15 +121,15 @@ module Hippo
       end
 
       case value.class.to_s
-      when "Range"  then value
-      when "Date"   then value
-      when "Time"   then value.to_date
-      when "String"
+      when 'Range'  then value
+      when 'Date'   then value
+      when 'Time'   then value.to_date
+      when 'String'
         format =  case value
                   when /\A\d{6}\z/ then '%y%m%d'
                   when /\A\d{8}\z/ then '%Y%m%d'
-                  when /\A(\d{8})-(\d{8})\z/ then
-                    return Date.parse($1, '%Y%m%d')..Date.parse($2, '%Y%m%d')
+                  when /\A(\d{8})-(\d{8})\z/
+                    return Date.parse(Regexp.last_match(1), '%Y%m%d')..Date.parse(Regexp.last_match(2), '%Y%m%d')
                   else
                     invalid!
                   end
@@ -138,12 +138,12 @@ module Hippo
       else
         invalid! "Invalid datatype(#{value.class}) for date field."
       end
-    rescue
+    rescue StandardError
       invalid!
     end
 
-    def invalid!(message = "Invalid value specified for #{self.datatype} field.")
-      raise Hippo::Exceptions::InvalidValue.new message
+    def invalid!(message = "Invalid value specified for #{datatype} field.")
+      raise Hippo::Exceptions::InvalidValue, message
     end
   end
 end

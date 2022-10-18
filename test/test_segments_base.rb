@@ -1,8 +1,9 @@
 require File.expand_path('test_helper', File.dirname(__FILE__))
 
 class TestSegmentsBase < MiniTest::Unit::TestCase
-  def setup; end;
-  def teardown; end;
+  def setup; end
+
+  def teardown; end
 
   def test_empty_segment
     seg = Hippo::Segments::TSS.new
@@ -77,13 +78,12 @@ class TestSegmentsBase < MiniTest::Unit::TestCase
   def test_compound_segment_with_empty_initial_fields
     seg = Hippo::Segments::TCS.new
 
-    seg.Field2  = 'Comp1Field2'
+    seg.Field2 = 'Comp1Field2'
 
     assert_equal 'TCS*:Comp1Field2~', seg.to_s
   end
 
   def test_compound_segment_assign_values_with_same_field_names
-
     seg = Hippo::Segments::TCS.new
 
     seg.CompositeCommonName = 'CompVal1'
@@ -114,11 +114,11 @@ class TestSegmentsBase < MiniTest::Unit::TestCase
   def test_raises_invalid_value_for_date_fields
     seg = Hippo::Segments::TSS.new
 
-    assert_raises(Hippo::Exceptions::InvalidValue) { seg.DateField = "asdf" }
-    assert_raises(Hippo::Exceptions::InvalidValue) { seg.DateField = "0810" }
+    assert_raises(Hippo::Exceptions::InvalidValue) { seg.DateField = 'asdf' }
+    assert_raises(Hippo::Exceptions::InvalidValue) { seg.DateField = '0810' }
 
     seg.DateField = Date.today
-    seg.DateField = "20120120"
+    seg.DateField = '20120120'
     seg.DateField = Time.now
     seg.DateField = nil
   end
@@ -126,11 +126,11 @@ class TestSegmentsBase < MiniTest::Unit::TestCase
   def test_raises_invalid_value_for_time_fields
     seg = Hippo::Segments::TSS.new
 
-    assert_raises(Hippo::Exceptions::InvalidValue) { seg.TimeField = "asdf" }
-    assert_raises(Hippo::Exceptions::InvalidValue) { seg.TimeField = "25111201" }
+    assert_raises(Hippo::Exceptions::InvalidValue) { seg.TimeField = 'asdf' }
+    assert_raises(Hippo::Exceptions::InvalidValue) { seg.TimeField = '25111201' }
     assert_raises(Hippo::Exceptions::InvalidValue) { seg.TimeField = Date.today }
 
-    seg.TimeField = "0120"
+    seg.TimeField = '0120'
     seg.TimeField = Time.now
     seg.TimeField = nil
   end
@@ -139,16 +139,16 @@ class TestSegmentsBase < MiniTest::Unit::TestCase
     seg = Hippo::Segments::TSS.new
 
     seg.DateField = '20120121'
-    assert_equal Date.new(2012,01,21), seg.DateField
+    assert_equal Date.new(2012, 0o1, 21), seg.DateField
 
     seg.TimeField = '231101'
-    assert_equal Time.new(Date.today.year, Date.today.month, Date.today.day, 23,11,01), seg.TimeField
+    assert_equal Time.new(Date.today.year, Date.today.month, Date.today.day, 23, 11, 0o1), seg.TimeField
 
     seg.IntegerField = '2'
     assert_equal 2, seg.IntegerField
 
     seg.DecimalField = '123.45'
-    assert_equal BigDecimal.new('123.45'), seg.DecimalField
+    assert_equal BigDecimal('123.45'), seg.DecimalField
 
     assert_equal 'TSS*******20120121*231101*2*123.45~', seg.to_s
   end
@@ -168,7 +168,7 @@ class TestSegmentsBase < MiniTest::Unit::TestCase
     isa.InterchangeTime                    = Time.now
     isa.RepetitionSeparator                = Hippo::DEFAULT_REPETITION_SEPARATOR
     isa.InterchangeControlVersionNumber    = '00501'
-    isa.InterchangeControlNumber           = 12345
+    isa.InterchangeControlNumber           = 12_345
     isa.AcknowledgmentRequested            = '1'
     isa.InterchangeUsageIndicator          = 'T'
     isa.ComponentElementSeparator          = Hippo::DEFAULT_COMPOSITE_SEPARATOR
@@ -183,18 +183,18 @@ class TestSegmentsBase < MiniTest::Unit::TestCase
   end
 
   def test_segment_parse_for_composite_fields
-    input_string = "STC*A7:755:87*20121127*U*2200******A3:448**REJECTED AT CLEARINGHOUSE PAY-TO PROVIDER PRIMARY ID# IS NOT USED (1235196510) (59141)"
+    input_string = 'STC*A7:755:87*20121127*U*2200******A3:448**REJECTED AT CLEARINGHOUSE PAY-TO PROVIDER PRIMARY ID# IS NOT USED (1235196510) (59141)'
     seg = Hippo::Segments::STC.new.parse(input_string)
     assert_equal input_string + '~', seg.to_s
   end
 
   def test_empty_fields_are_removed
-    n1 = Hippo::Segments::N1.new.parse("N1*PE*    *XX*1234567890")
-    assert_equal "N1*PE**XX*1234567890~", n1.to_s
+    n1 = Hippo::Segments::N1.new.parse('N1*PE*    *XX*1234567890')
+    assert_equal 'N1*PE**XX*1234567890~', n1.to_s
   end
 
   def test_remove_empty_fields_doesnt_change_populated_fields
-    original = "N1*PE*SOME RANDOM   NAME HERE*XX*1234567890"
+    original = 'N1*PE*SOME RANDOM   NAME HERE*XX*1234567890'
     n1 = Hippo::Segments::N1.new.parse(original)
     assert_equal original + '~', n1.to_s
   end
