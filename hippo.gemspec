@@ -16,8 +16,7 @@ Gem::Specification.new do |s|
   s.rubyforge_project = "hippo"
 
   s.add_development_dependency('minitest')
-  s.add_development_dependency('rake', '~>10.0.2')
-
+  s.add_development_dependency('rake', '~>12.3.3')
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
